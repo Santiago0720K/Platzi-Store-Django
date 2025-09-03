@@ -1,0 +1,421 @@
+{% extends 'base.html' %}
+
+{% block title %}Productos - Tienda Platzi{% endblock %}
+
+{% block content %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+    }
+
+    .search-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 1.25rem;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        height: 100%;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent-blue);
+        box-shadow: 0 20px 60px rgba(99, 102, 241, 0.2);
+    }
+
+    .product-image {
+        position: relative;
+        overflow: hidden;
+        height: 250px;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.08);
+    }
+
+    .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(139, 92, 246, 0.8));
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-card:hover .product-overlay {
+        opacity: 1;
+    }
+
+    .product-body {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .product-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .product-description {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        flex: 1;
+    }
+
+    .product-price {
+        font-size: 1.75rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        text-align: right;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: auto;
+    }
+
+    .btn-product-primary {
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        border: none;
+        border-radius: 0.75rem;
+        color: white;
+        font-weight: 500;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .btn-product-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        color: white;
+    }
+
+    .btn-product-secondary {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .btn-product-secondary:hover {
+        background: var(--hover-bg);
+        border-color: var(--accent-blue);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+    }
+
+    .no-products {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .no-products-icon {
+        font-size: 4rem;
+        color: var(--accent-blue);
+        margin-bottom: 2rem;
+    }
+
+    .no-products h4 {
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .no-products p {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .pagination {
+        margin: 3rem 0;
+        justify-content: center;
+    }
+
+    .page-item .page-link {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        margin: 0 0.25rem;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .page-item .page-link:hover {
+        background: var(--hover-bg);
+        border-color: var(--accent-blue);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+    }
+
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        border-color: var(--accent-blue);
+        color: white;
+    }
+
+    .page-item.disabled .page-link {
+        background: var(--card-bg);
+        border-color: var(--border-color);
+        color: var(--text-secondary);
+        opacity: 0.5;
+    }
+
+    .filter-badge {
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 2.25rem;
+        }
+        
+        .product-actions {
+            flex-direction: column;
+        }
+        
+        .btn-product-primary,
+        .btn-product-secondary {
+            flex: none;
+        }
+    }
+</style>
+
+<div class="page-header animate-fade-up">
+    <h1 class="page-title">Nuestros Productos</h1>
+    <p class="page-subtitle">Descubre nuestra exclusiva colección de productos cuidadosamente seleccionados para ofrecerte la mejor calidad y experiencia de compra.</p>
+</div>
+
+<!-- Search and filter section -->
+<div class="search-card animate-fade-up">
+    <form method="get" action="/products">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-9">
+                <label for="search-input" class="form-label">
+                    <i class="bi bi-search me-2"></i>Buscar productos
+                </label>
+                <input type="text" 
+                       name="q" 
+                       id="search-input"
+                       class="form-control" 
+                       placeholder="Buscar por nombre o descripción..." 
+                       value="{{ request.GET.q }}">
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn-modern-primary">
+                    <i class="bi bi-search"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </form>
+    
+    {% if request.GET.q %}
+    <div class="mt-3">
+        <span class="filter-badge">
+            <i class="bi bi-funnel"></i>
+            Búsqueda: "{{ request.GET.q }}"
+            <a href="/products" class="text-white ms-2" style="text-decoration: none;">
+                <i class="bi bi-x"></i>
+            </a>
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Products grid -->
+<div class="row g-4">
+    {% for product in products %}
+    <div class="col-lg-4 col-md-6">
+        <div class="product-card animate-fade-up" style="animation-delay: {{ forloop.counter0|floatformat:0|add:'0.1' }}s;">
+            <div class="product-image">
+                <img src="{{ product.images.0 }}" alt="{{ product.title }}">
+            </div>
+            <div class="product-body">
+                <h5 class="product-title">{{ product.title }}</h5>
+                <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+                <div class="product-price">${{ product.price }}</div>
+                <div class="product-actions">
+                    <a href="{% url 'product_create' %}" class="btn-product-primary">
+                        <i class="bi bi-cart-plus"></i>
+                        Agregar
+                    </a>
+                    <a href="{% url 'product_detail' product.id %}" class="btn-product-secondary">
+                        <i class="bi bi-eye"></i>
+                        Ver Más
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="no-products animate-fade-up">
+            <div class="no-products-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <h4>¡No se encontraron productos!</h4>
+            {% if request.GET.q %}
+            <p>Lo sentimos, tu búsqueda de "<strong>{{ request.GET.q }}</strong>" no coincidió con ningún producto en nuestro catálogo.</p>
+            {% else %}
+            <p>Aún no hay productos disponibles en nuestra tienda.</p>
+            {% endif %}
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="/products" class="btn-modern-primary">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Ver Todos los Productos
+                </a>
+                <a href="/products/create" class="btn-modern-secondary">
+                    <i class="bi bi-plus-lg"></i>
+                    Añadir Producto
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Navegación de páginas" class="pagination-container">
+    <ul class="pagination">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                <i class="bi bi-chevron-left"></i> Anterior
+            </a>
+        </li>
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">
+                Siguiente <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add stagger animation to product cards
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 + (index * 100));
+    });
+
+    // Add search input focus animation
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+        this.parentElement.style.transition = 'transform 0.3s ease';
+    });
+
+    searchInput.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+    });
+
+    // Add loading state to search button
+    const searchForm = document.querySelector('form');
+    const searchButton = searchForm.querySelector('button[type="submit"]');
+    
+    searchForm.addEventListener('submit', function() {
+        searchButton.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Buscando...';
+        searchButton.style.pointerEvents = 'none';
+    });
+});
+</script>
+{% endblock %}
