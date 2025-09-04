@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Producto{% endblock %}
+
+{% block content %}
+<style>
+    /* Contenedor principal */
+    .edit-container {
+        max-width: 750px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: var(--bg-color);
+        color: var(--text-color);
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        animation: fadeIn 0.4s ease-in-out;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Variables para modo oscuro y claro */
+    :root {
+        --bg-color: #fff;
+        --text-color: #222;
+        --input-bg: #f9f9f9;
+        --input-border: #ccc;
+        --input-text: #000;
+    }
+
+    [data-theme="dark"] {
+        --bg-color: #1e1e2f;
+        --text-color: #fff;
+        --input-bg: #2a2a3d;
+        --input-border: #444;
+        --input-text: #fff;
+    }
+
+    /* Encabezado */
+    .edit-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .edit-header h1 {
+        font-size: 1.9rem;
+        color: var(--text-color);
+        font-weight: 700;
+    }
+
+    .edit-header p {
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.95rem;
+    }
+
+    /* Campos del formulario */
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.4rem;
+        color: var(--text-color);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--input-border);
+        background-color: var(--input-bg);
+        color: var(--input-text);
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.2s, background 0.3s, color 0.3s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1e90ff;
+        box-shadow: 0 0 8px rgba(30, 144, 255, 0.3);
+    }
+
+    /* Imagen actual */
+    .image-preview-container {
+        text-align: center;
+        margin: 1rem 0;
+    }
+
+    .current-image {
+        max-width: 150px;
+        max-height: 150px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0.5rem;
+    }
+
+    .image-label {
+        display: block;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Cambiar imagen */
+    .change-image-container {
+        border: 2px dashed #1e90ff;
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        background: var(--input-bg);
+        transition: background 0.3s ease-in-out;
+    }
+
+    .change-image-container:hover {
+        background: rgba(30, 144, 255, 0.1);
+    }
+
+    .change-image-btn {
+        background: #1e90ff;
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out, transform 0.2s;
+        margin-top: 0.8rem;
+    }
+
+    .change-image-btn:hover {
+        background: #1565c0;
+        transform: scale(1.05);
+    }
+
+    /* Vista previa */
+    #image-preview {
+        display: none;
+        max-width: 180px;
+        max-height: 180px;
+        margin-top: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Botones finales */
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+    }
+
+    .btn-cancel {
+        background: #f44336;
+        color: white;
+        padding: 0.7rem 1.3rem;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: background 0.2s ease-in-out;
+    }
+
+    .btn-cancel:hover {
+        background: #d32f2f;
+    }
+
+    .btn-save {
+        background: #28a745;
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s ease-in-out, transform 0.2s;
+    }
+
+    .btn-save:hover {
+        background: #218838;
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="edit-container">
+    <div class="edit-header">
+        <h1>Editar Producto</h1>
+        <p>Modifica la información y guarda los cambios.</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger mb-4">
+                {% for error in form.non_field_errors %}
+                    <p class="mb-0">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Campo: Título -->
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Título</label>
+            {{ form.title }}
+            {% for error in form.title.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Campo: Precio -->
+        <div class="form-group">
+            <label for="{{ form.price.id_for_label }}" class="form-label">Precio</label>
+            {{ form.price }}
+            {% for error in form.price.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Campo: Descripción -->
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}" class="form-label">Descripción</label>
+            {{ form.description }}
+            {% for error in form.description.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Imagen actual -->
+        {% if product.images.0 %}
+            <div class="image-preview-container">
+                <span class="image-label">Imagen Actual</span>
+                <img src="{{ product.images.0 }}" alt="Imagen actual de {{ product.title }}" class="current-image">
+            </div>
+        {% endif %}
+
+        <!-- Subir nueva imagen -->
+        <div class="form-group">
+            <label class="form-label">Cambiar Imagen</label>
+            <div class="change-image-container" id="image-drop-zone">
+                <p>Arrastra y suelta una nueva imagen aquí, o haz clic para seleccionar una.</p>
+                <button type="button" class="change-image-btn" id="choose-image-btn">Seleccionar Imagen</button>
+                {{ form.image }}
+                <input 
+                    type="url" 
+                    id="image-url" 
+                    placeholder="O pega una URL de imagen" 
+                    class="form-control" 
+                    style="margin-top:10px;">
+                <img id="image-preview" alt="Vista previa">
+            </div>
+            {% for error in form.image.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+            <a href="{% url 'product_list' %}" class="btn-cancel">Cancelar</a>
+            <button type="submit" class="btn-save">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('image-drop-zone');
+    const imageInput = document.getElementById('id_image_input');
+    const imageUrlInput = document.getElementById('image-url');
+    const imagePreview = document.getElementById('image-preview');
+    const chooseImageBtn = document.getElementById('choose-image-btn');
+
+    function showPreview(src) {
+        imagePreview.src = src;
+        imagePreview.style.display = 'block';
+    }
+
+    function handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => showPreview(e.target.result);
+            reader.readAsDataURL(file);
+        } else {
+            alert('Por favor selecciona un archivo de imagen válido.');
+        }
+    }
+
+    chooseImageBtn.addEventListener('click', () => imageInput.click());
+
+    imageInput.addEventListener('change', () => {
+        if (imageInput.files.length > 0) handleFile(imageInput.files[0]);
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            imageInput.files = e.dataTransfer.files;
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    imageUrlInput.addEventListener('input', () => {
+        const url = imageUrlInput.value.trim();
+        if (url) {
+            showPreview(url);
+        }
+    });
+});
+</script>
+{% endblock %}

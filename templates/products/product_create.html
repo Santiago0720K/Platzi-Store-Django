@@ -4,481 +4,279 @@
 
 {% block content %}
 <style>
+    /* --- CONTENEDOR PRINCIPAL --- */
     .create-container {
-        max-width: 800px;
-        margin: 0 auto;
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: var(--card-bg);
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease-in-out;
+        animation: fadeIn 0.6s ease-in-out;
     }
 
+    /* --- ENCABEZADO --- */
     .page-header {
         text-align: center;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
     }
 
     .page-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+        font-size: 2.2rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
 
     .page-subtitle {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: var(--text-secondary);
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.6;
     }
 
-    .form-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 1.5rem;
-        overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-
-    .form-card:hover {
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
-
-    .form-header {
-        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-        padding: 2rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .form-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-        animation: rotate 20s linear infinite;
-    }
-
-    .form-header-content {
-        position: relative;
-        z-index: 2;
-    }
-
-    .form-header h1 {
-        color: white;
-        font-size: 1.75rem;
-        font-weight: 600;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-    }
-
-    .form-body {
-        padding: 3rem;
-    }
-
+    /* --- CAMPOS DEL FORMULARIO --- */
     .form-group {
-        margin-bottom: 2rem;
-        position: relative;
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
     }
 
     .form-label {
-        color: var(--text-primary);
         font-weight: 600;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 0.95rem;
     }
 
     .form-control {
-        background: var(--hover-bg);
         border: 2px solid var(--border-color);
-        color: var(--text-primary);
+        background: var(--hover-bg);
+        padding: 0.85rem 1rem;
         border-radius: 0.75rem;
-        padding: 0.875rem 1.25rem;
-        font-size: 0.95rem;
+        font-size: 1rem;
         transition: all 0.3s ease;
-        width: 100%;
     }
 
     .form-control:focus {
+        border-color: var(--accent-blue);
         background: var(--card-bg);
-        border-color: var(--accent-blue);
-        color: var(--text-primary);
-        box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.15);
-        transform: translateY(-2px);
-    }
-
-    .form-control:hover {
-        border-color: var(--accent-blue);
-    }
-
-    .form-control::placeholder {
-        color: var(--text-secondary);
-        opacity: 0.8;
+        box-shadow: 0 0 10px rgba(0, 170, 255, 0.2);
+        transform: scale(1.02);
     }
 
     textarea.form-control {
+        min-height: 100px;
         resize: vertical;
-        min-height: 120px;
-        font-family: inherit;
     }
 
-    .help-text {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        margin-top: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
+    /* --- ZONA DE IMAGEN --- */
+    .image-upload {
+        border: 2px dashed var(--border-color);
+        border-radius: 0.75rem;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
     }
 
-    .error-message {
-        color: #ef4444;
-        font-size: 0.875rem;
-        margin-top: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(239, 68, 68, 0.1);
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.5rem;
-        border-left: 3px solid #ef4444;
+    .image-upload.dragover {
+        border-color: var(--accent-blue);
+        background: var(--hover-bg);
     }
 
+    .image-upload img {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 1rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+
+    /* --- BOTONES --- */
     .form-actions {
         display: flex;
-        gap: 1rem;
         justify-content: flex-end;
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid var(--border-color);
+        gap: 1rem;
+        margin-top: 2rem;
     }
 
     .btn-create {
         background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        color: #fff;
+        font-weight: 600;
+        padding: 0.9rem 2rem;
         border: none;
         border-radius: 0.75rem;
-        color: white;
-        font-weight: 600;
-        padding: 0.875rem 2rem;
+        font-size: 1rem;
+        cursor: pointer;
         transition: all 0.3s ease;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.95rem;
-        min-width: 150px;
-        justify-content: center;
     }
 
     .btn-create:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
-        color: white;
-    }
-
-    .btn-create:active {
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 170, 255, 0.4);
     }
 
     .btn-cancel {
         background: transparent;
         border: 2px solid var(--border-color);
+        padding: 0.9rem 2rem;
         border-radius: 0.75rem;
         color: var(--text-secondary);
-        font-weight: 500;
-        padding: 0.875rem 2rem;
+        font-weight: 600;
+        cursor: pointer;
         transition: all 0.3s ease;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.95rem;
-        min-width: 130px;
-        justify-content: center;
     }
 
     .btn-cancel:hover {
         background: var(--hover-bg);
-        border-color: var(--accent-blue);
         color: var(--text-primary);
-        transform: translateY(-2px);
+        border-color: var(--accent-blue);
     }
 
-    .floating-label {
-        position: relative;
-        margin-bottom: 2rem;
-    }
-
-    .floating-label .form-control {
-        padding-top: 1.25rem;
-        padding-bottom: 0.5rem;
-    }
-
-    .floating-label .form-label {
-        position: absolute;
-        top: 0.875rem;
-        left: 1.25rem;
-        color: var(--text-secondary);
-        font-weight: 400;
-        transition: all 0.3s ease;
-        pointer-events: none;
-        margin-bottom: 0;
-    }
-
-    .floating-label .form-control:focus + .form-label,
-    .floating-label .form-control:not(:placeholder-shown) + .form-label {
-        top: 0.25rem;
-        font-size: 0.75rem;
-        color: var(--accent-blue);
-        font-weight: 600;
-    }
-
-    .progress-indicator {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 2rem;
-        gap: 1rem;
-    }
-
-    .progress-step {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: var(--border-color);
-        color: var(--text-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: 0.875rem;
-        transition: all 0.3s ease;
-    }
-
-    .progress-step.active {
-        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-        color: white;
-        transform: scale(1.1);
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-    }
-
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animate-fade-up {
-        animation: fadeInUp 0.6s ease-out forwards;
+    /* --- ANIMACIONES --- */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 768px) {
         .create-container {
-            margin: 0 1rem;
+            padding: 1.5rem;
+            margin: 1rem;
         }
-        
-        .form-body {
-            padding: 2rem;
-        }
-        
         .form-actions {
             flex-direction: column-reverse;
         }
-        
         .btn-create,
         .btn-cancel {
             width: 100%;
-            min-width: auto;
-        }
-        
-        .page-title {
-            font-size: 2rem;
         }
     }
 </style>
 
 <div class="create-container">
-    <div class="page-header animate-fade-up">
-        <h1 class="page-title">Crear Nuevo Producto</h1>
-        <p class="page-subtitle">Completa la información del producto para agregarlo a tu catálogo. Todos los campos son importantes para una mejor experiencia de compra.</p>
+    <div class="page-header">
+        <h1 class="page-title">Crear Producto</h1>
+        <p class="page-subtitle">Agrega un nuevo producto a tu catálogo fácilmente.</p>
     </div>
 
-    <div class="progress-indicator animate-fade-up">
-        <div class="progress-step active">1</div>
-        <div class="progress-step">2</div>
-        <div class="progress-step">3</div>
-    </div>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
 
-    <div class="form-card animate-fade-up">
-        <div class="form-header">
-            <div class="form-header-content">
-                <h1>
-                    <i class="bi bi-plus-circle-fill"></i>
-                    Información del Producto
-                </h1>
+        <!-- Título -->
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}" class="form-label"><i class="bi bi-tag-fill"></i> {{ form.title.label }}</label>
+            {{ form.title }}
+            {% for error in form.title.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Precio -->
+        <div class="form-group">
+            <label for="{{ form.price.id_for_label }}" class="form-label"><i class="bi bi-currency-dollar"></i> {{ form.price.label }}</label>
+            {{ form.price }}
+            {% for error in form.price.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}" class="form-label"><i class="bi bi-card-text"></i> {{ form.description.label }}</label>
+            {{ form.description }}
+            {% for error in form.description.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Category ID -->
+        <div class="form-group">
+            <label for="{{ form.categoryId.id_for_label }}" class="form-label"><i class="bi bi-list-ol"></i> {{ form.categoryId.label }}</label>
+            {{ form.categoryId }}
+            {% for error in form.categoryId.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Imagen -->
+        <div class="form-group">
+            <label class="form-label"><i class="bi bi-image"></i> {{ form.image.label }}</label>
+            <div id="drop-zone" class="image-upload">
+                <p>Arrastra una imagen o haz clic para seleccionarla</p>
+                <img id="preview-image" alt="Vista previa">
             </div>
+            {{ form.image }}
+            {% for error in form.image.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
         </div>
-        
-        <div class="form-body">
-            <form method="post" novalidate>
-                {% csrf_token %}
-                
-                {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}" class="form-label">
-                        {% if field.name == 'title' %}
-                            <i class="bi bi-tag-fill"></i>
-                        {% elif field.name == 'description' %}
-                            <i class="bi bi-card-text"></i>
-                        {% elif field.name == 'price' %}
-                            <i class="bi bi-currency-dollar"></i>
-                        {% elif field.name == 'image' %}
-                            <i class="bi bi-image-fill"></i>
-                        {% else %}
-                            <i class="bi bi-info-circle"></i>
-                        {% endif %}
-                        {{ field.label }}
-                    </label>
-                    
-                    {{ field }}
-                    
-                    {% if field.help_text %}
-                        <div class="help-text">
-                            <i class="bi bi-question-circle"></i>
-                            {{ field.help_text }}
-                        </div>
-                    {% endif %}
-                    
-                    {% for error in field.errors %}
-                        <div class="error-message">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                </div>
-                {% endfor %}
 
-                <div class="form-actions">
-                    <a href="/products" class="btn-cancel">
-                        <i class="bi bi-x-lg"></i>
-                        Cancelar
-                    </a>
-                    <button type="submit" class="btn-create">
-                        <i class="bi bi-check-circle-fill"></i>
-                        Crear Producto
-                    </button>
-                </div>
-            </form>
+        <!-- Botones -->
+        <div class="form-actions">
+            <a href="/products" class="btn-cancel">Cancelar</a>
+            <button type="submit" class="btn-create">Crear Producto</button>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add form validation feedback
-    const form = document.querySelector('form');
-    const inputs = form.querySelectorAll('.form-control');
-    const submitBtn = form.querySelector('.btn-create');
-    
-    // Add real-time validation
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            validateField(this);
-        });
-        
-        input.addEventListener('input', function() {
-            clearFieldError(this);
-        });
-    });
-    
-    function validateField(field) {
-        const group = field.closest('.form-group');
-        const isValid = field.value.trim() !== '';
-        
-        if (!isValid && field.hasAttribute('required')) {
-            field.style.borderColor = '#ef4444';
-            group.classList.add('has-error');
+document.addEventListener('DOMContentLoaded', () => {
+    const dropZone = document.getElementById('drop-zone');
+    const imageInput = document.querySelector('input[type="file"][name="image"]');
+    const previewImage = document.getElementById('preview-image');
+    const dropText = dropZone.querySelector('p');
+
+    imageInput.style.display = 'none';
+
+    // Manejo de archivos
+    function handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+                dropText.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
         } else {
-            field.style.borderColor = '#10b981';
-            group.classList.remove('has-error');
+            alert('Por favor selecciona una imagen válida.');
         }
     }
-    
-    function clearFieldError(field) {
-        const group = field.closest('.form-group');
-        field.style.borderColor = 'var(--border-color)';
-        group.classList.remove('has-error');
-    }
-    
-    // Add loading state to submit button
-    form.addEventListener('submit', function() {
-        submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Creando...';
-        submitBtn.style.pointerEvents = 'none';
-        submitBtn.style.opacity = '0.8';
+
+    // Click para seleccionar
+    dropZone.addEventListener('click', () => imageInput.click());
+
+    // Cambio desde el input
+    imageInput.addEventListener('change', () => {
+        if (imageInput.files.length > 0) {
+            handleFile(imageInput.files[0]);
+        }
     });
-    
-    // Add character counter for description field
-    const descriptionField = document.querySelector('textarea[name="description"]');
-    if (descriptionField) {
-        const maxLength = 500; // Adjust based on your needs
-        const counter = document.createElement('div');
-        counter.className = 'character-counter';
-        counter.style.cssText = `
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            text-align: right;
-            margin-top: 0.5rem;
-        `;
-        
-        function updateCounter() {
-            const remaining = maxLength - descriptionField.value.length;
-            counter.textContent = `${descriptionField.value.length}/${maxLength} caracteres`;
-            
-            if (remaining < 50) {
-                counter.style.color = '#f59e0b';
-            } else if (remaining < 20) {
-                counter.style.color = '#ef4444';
-            } else {
-                counter.style.color = 'var(--text-secondary)';
-            }
+
+    // Drag & drop
+    dropZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', e => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            handleFile(e.dataTransfer.files[0]);
         }
-        
-        descriptionField.parentNode.appendChild(counter);
-        descriptionField.addEventListener('input', updateCounter);
-        updateCounter();
-    }
-    
-    // Add smooth transitions for form elements
-    inputs.forEach((input, index) => {
-        input.style.opacity = '0';
-        input.style.transform = 'translateX(-20px)';
-        input.style.transition = 'all 0.6s ease';
-        
-        setTimeout(() => {
-            input.style.opacity = '1';
-            input.style.transform = 'translateX(0)';
-        }, 200 + (index * 100));
     });
 });
 </script>
