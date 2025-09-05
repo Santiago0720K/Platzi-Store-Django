@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages # Import messages
 import requests
 from .forms import ProductForm
 
@@ -22,6 +23,7 @@ def product_list(request):
     except requests.exceptions.RequestException as e:
         print(f"API request failed: {e}")
         products = []
+        messages.error(request, f"Error al cargar productos: {e}") # Add error message
 
     # Fetch categories
     try:
@@ -29,13 +31,12 @@ def product_list(request):
         categories_response.raise_for_status()
         all_categories = categories_response.json()
         
-        # Filter categories to include only the desired ones
-        desired_category_names = ["Clothes", "Furniture", "Electronics", "Shoes", "Miscellaneous"]
-        categories = [cat for cat in all_categories if cat.get('name') in desired_category_names]
+        categories = all_categories
         
     except requests.exceptions.RequestException as e:
         print(f"API categories request failed: {e}")
         categories = []
+        messages.error(request, f"Error al cargar categorías: {e}") # Add error message
 
     return render(request, 'products/product_list.html', {'products': products, 'categories': categories})
 
@@ -47,6 +48,7 @@ def product_detail(request, pk):
     except requests.exceptions.RequestException as e:
         print(f"API request failed: {e}")
         product = None
+        messages.error(request, f"Error al cargar el detalle del producto: {e}") # Add error message
     
     return render(request, 'products/product_detail.html', {'product': product})
 
@@ -63,7 +65,7 @@ def product_create(request):
                     upload_response.raise_for_status()
                     image_url = upload_response.json().get('location')
                 except requests.exceptions.RequestException as e:
-                    form.add_error('image', f'Error uploading image: {e}')
+                    form.add_error('image', f'Error al subir la imagen: {e}')
 
             # 2. Create product if image upload was successful (or no image was provided)
             if not form.errors:
@@ -78,14 +80,16 @@ def product_create(request):
                 try:
                     response = requests.post(f'{BASE_URL}products/', json=payload)
                     response.raise_for_status()
+                    messages.success(request, "Producto creado exitosamente!") # Success message
                     return redirect('product_list')
                 except requests.exceptions.RequestException as e:
                     print(f"Error creating product: {e}")
                     if e.response is not None:
                         print(f"API Response: {e.response.text}")
-                    form.add_error(None, f'Error creating product: {e}')
+                    messages.error(request, f'Error al crear el producto: {e}') # Error message
+                    form.add_error(None, f'Error al crear el producto: {e}')
         else:
-            pass
+            messages.error(request, "Por favor, corrija los errores en el formulario.") # Form validation error
     else:
         form = ProductForm()
     
@@ -97,6 +101,7 @@ def product_edit(request, pk):
         product_response.raise_for_status()
         product_data = product_response.json()
     except requests.exceptions.RequestException as e:
+        messages.error(request, f"Error al cargar el producto para edición: {e}") # Add error message
         return render(request, 'products/product_edit.html', {'error': f'Could not fetch product: {e}'})
 
     if request.method == 'POST':
@@ -113,7 +118,7 @@ def product_edit(request, pk):
                     new_image_url = upload_response.json().get('location')
                     image_urls = [new_image_url] # Replace old images with the new one
                 except requests.exceptions.RequestException as e:
-                    form.add_error('image', f'Error uploading image: {e}')
+                    form.add_error('image', f'Error al subir la imagen: {e}')
             elif form.cleaned_data.get('image_url'):
                 image_urls = [form.cleaned_data['image_url']]
 
@@ -129,9 +134,13 @@ def product_edit(request, pk):
                 try:
                     response = requests.put(f'{BASE_URL}products/{pk}', json=payload)
                     response.raise_for_status()
+                    messages.success(request, "Producto actualizado exitosamente!") # Success message
                     return redirect('product_list')
                 except requests.exceptions.RequestException as e:
-                    form.add_error(None, f'Error updating product: {e}')
+                    messages.error(request, f'Error al actualizar el producto: {e}') # Error message
+                    form.add_error(None, f'Error al actualizar el producto: {e}')
+        else:
+            messages.error(request, "Por favor, corrija los errores en el formulario.") # Form validation error
     else:
         # Pre-populate the form with existing data
         initial_data = {
@@ -149,7 +158,9 @@ def product_delete(request, pk):
         try:
             response = requests.delete(f'{BASE_URL}products/{pk}')
             response.raise_for_status()  # Raise an exception for bad status codes
+            messages.success(request, "Producto eliminado exitosamente!") # Success message
         except requests.exceptions.RequestException as e:
             print(f"API request failed: {e}")
+            messages.error(request, f"Error al eliminar el producto: {e}") # Error message
     
     return redirect('product_list')
