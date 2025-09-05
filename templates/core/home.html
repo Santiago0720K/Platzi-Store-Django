@@ -24,6 +24,18 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        animation: popIn 1s ease-out forwards;
+    }
+
+    @keyframes popIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
     .hero-subtitle {
@@ -159,12 +171,32 @@
 
     @keyframes rotate {
         from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+        to { transform: (360deg); }
     }
 
     .cta-content {
         position: relative;
         z-index: 2;
+    }
+
+    .github-hero-btn {
+        width: 48px; /* Make it square */
+        height: 48px; /* Make it square */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px; /* Slightly rounded corners */
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        color: white;
+        font-size: 1.8rem; /* Adjust icon size */
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        margin-left: 1.5rem; /* Add more space to the left */
+    }
+
+    .github-hero-btn:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.6);
     }
 
     @media (max-width: 768px) {
@@ -187,7 +219,12 @@
         <div class="row align-items-center g-5">
             <div class="col-12 hero-content text-center">
                 <div class="animate-fade-up">
-                    <h1 class="hero-title">Bienvenido a la Tienda Platzi</h1>
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <h1 class="hero-title mb-0 me-3">Bienvenido a la Tienda Platzi</h1>
+                        <a href="https://github.com/Santiago0720K/Platzi-Store-Django" target="_blank" class="btn github-hero-btn">
+                            <i class="bi bi-github"></i>
+                        </a>
+                    </div>
                     <p class="hero-subtitle mx-auto">Descubre una experiencia de compra única con productos de la más alta calidad. Tu tienda online de confianza para encontrar exactamente lo que necesitas.</p>
                 </div>
             </div>
@@ -231,7 +268,7 @@
 <div class="container">
     <div class="cta-section">
         <div class="cta-content">
-            <h2 class="display-6 fw-bold text-white mb-3">¿Listo para comenzar?</h2>
+            <h2 class="display-6 fw-bold mb-3">¿Listo para comenzar?</h2>
             <p class="lead text-secondary mb-4">Explora nuestra amplia colección de productos y encuentra exactamente lo que estás buscando.</p>
             <div class="d-flex gap-3 justify-content-center flex-wrap">
                 <a href="/products" class="btn-modern-primary">
@@ -242,7 +279,7 @@
                     <i class="bi bi-plus-circle"></i>
                     Crear Producto
                 </a>
-            </div>
+                </div>
         </div>
     </div>
 </div>

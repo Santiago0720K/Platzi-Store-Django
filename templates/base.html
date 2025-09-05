@@ -7,42 +7,34 @@
     <title>{% block title %}Tienda Platzi{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-dark: #1a1d29;
-            --secondary-dark: #252940;
-            --accent-blue: #6366f1;
-            --accent-purple: #8b5cf6;
-            --text-primary: #f8fafc;
+            --primary-dark: #0a0e1a;
+            --secondary-dark: #1a1d29;
+            --accent-blue: #00d4ff;
+            --accent-purple: #6366f1;
+            --accent-cyan: #00f5ff;
+            --text-primary: #ffffff;
             --text-secondary: #94a3b8;
             --border-color: #334155;
             --card-bg: #1e293b;
             --hover-bg: #2d3748;
-        }
-
-                :root {
-            --primary-dark: #1a1d29;
-            --secondary-dark: #252940;
-            --accent-blue: #00aaff;
-            --accent-purple: #00d1ff;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-color: #334155;
-            --card-bg: #1e293b;
-            --hover-bg: #2d3748;
+            --glass-bg: rgba(26, 29, 41, 0.85);
         }
 
         body.light-mode {
             --primary-dark: #f8fafc;
             --secondary-dark: #e2e8f0;
-            --accent-blue: #0077cc;
-            --accent-purple: #00aaff;
+            --accent-blue: #0ea5e9;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
             --text-primary: #1e293b;
             --text-secondary: #475569;
             --border-color: #cbd5e1;
             --card-bg: #ffffff;
             --hover-bg: #f1f5f9;
+            --glass-bg: rgba(255, 255, 255, 0.85);
         }
 
         * {
@@ -57,7 +49,13 @@
             color: var(--text-primary);
             min-height: 100vh;
             position: relative;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         body::before {
@@ -67,188 +65,210 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(0, 170, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(0, 209, 255, 0.1) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 40%);
             pointer-events: none;
             z-index: -1;
         }
 
-        /* Sidebar */
-        .sidebar {
-            background: linear-gradient(180deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
-            border-right: 1px solid var(--border-color);
-            box-shadow: 0 0 30px rgba(0,0,0,0.2);
-        }
-
-        .sidebar .nav-link {
-            color: var(--text-secondary);
-            font-weight: 500;
-            padding: 1rem 1.5rem;
-            margin: 0.5rem 1rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar .nav-link:hover {
-            color: var(--text-primary);
-            background: var(--hover-bg);
-            transform: translateX(5px);
-        }
-
-        .sidebar .nav-link.active {
-            color: var(--text-primary);
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            box-shadow: 0 4px 15px rgba(0, 170, 255, 0.4);
-        }
-
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar-header .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Main content */
-        .main-content {
-            padding-top: 100px;
-        }
-
-        /* Header */
+        /* NUEVA BARRA SUPERIOR MEJORADA */
         .header {
-            background: rgba(26, 29, 41, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.5rem;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1030;
+            box-shadow: 
+                0 4px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 212, 255, 0.1),
+                transparent
+            );
+            transition: left 3s ease-in-out;
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .header:hover {
+            box-shadow: 
+                0 8px 40px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(0, 212, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
         body.light-mode .header {
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--glass-bg);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                0 4px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
 
-        .header .menu-btn {
-            font-size: 1.5rem;
-            color: var(--text-primary);
+        body.light-mode .header:hover {
+            box-shadow: 
+                0 8px 40px rgba(0, 0, 0, 0.15),
+                0 0 80px rgba(14, 165, 233, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
-        body.light-mode #theme-toggle {
-            color: #000 !important;
-        }
-
-        /* Cards, Buttons, etc. */
-        .modern-card, .search-card {
-            background: var(--card-bg);
+        /* Botón de menú mejorado */
+        .menu-btn {
+            background: transparent;
             border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            color: var(--text-secondary) !important;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+            box-shadow: none;
+        }
+
+        .menu-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary) !important;
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Título de la aplicación mejorado */
+        .app-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            position: relative;
+            letter-spacing: -0.02em;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .app-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
             transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .header:hover .app-title::after {
+            width: 100%;
+        }
+
+        /* Botón de tema mejorado */
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--text-primary) !important;
+            font-size: 1.2rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
             overflow: hidden;
         }
 
-        .modern-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            border-color: var(--accent-blue);
-        }
-
-        .btn-modern-primary {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            border: none;
-            border-radius: 0.75rem;
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-modern-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 170, 255, 0.4);
-            color: white;
-        }
-
-        .btn-modern-secondary {
-            background: var(--hover-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            color: var(--text-primary);
-            font-weight: 500;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-modern-secondary:hover {
-            background: var(--border-color);
-            color: var(--text-primary);
-            transform: translateY(-2px);
-        }
-
-        .form-control {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            border-radius: 0.75rem;
-        }
-
-        .form-control:focus {
-            background: var(--hover-bg);
-            border-color: var(--accent-blue);
-            color: var(--text-primary);
-            box-shadow: 0 0 0 0.2rem rgba(0, 170, 255, 0.2);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            position: relative;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        body::before {
+        .theme-toggle::before {
             content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        /* Sidebar */
+        .theme-toggle:hover {
+            transform: translateY(-2px) rotate(180deg);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .theme-toggle:hover::before {
+            opacity: 0.1;
+        }
+
+        .theme-toggle i {
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary) !important;
+        }
+
+        body.light-mode .theme-toggle:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Header container */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar mantenido igual */
         .sidebar {
             background: linear-gradient(180deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
             border-right: 1px solid var(--border-color);
@@ -276,7 +296,7 @@
         .sidebar .nav-link.active {
             color: var(--text-primary);
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
         }
 
         .sidebar-header {
@@ -298,32 +318,7 @@
             padding-top: 100px;
         }
 
-        /* Header */
-        .header {
-            background: rgba(26, 29, 41, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 1.5rem;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1030;
-        }
-        .light-mode .header {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .header .menu-btn {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-        }
-
-        body.light-mode #theme-toggle {
-            color: #000 !important;
-        }
-
-        /* Cards, Buttons, etc. */
+        /* Cards y otros elementos mantenidos */
         .modern-card, .search-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -355,7 +350,7 @@
 
         .btn-modern-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
             color: white;
         }
 
@@ -390,10 +385,10 @@
             background: var(--hover-bg);
             border-color: var(--accent-blue);
             color: var(--text-primary);
-            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.2);
         }
 
-        /* Animations */
+        /* Animaciones */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -402,21 +397,40 @@
         .animate-fade-up {
             animation: fadeInUp 0.6s ease-out forwards;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-title {
+                font-size: 1.5rem;
+            }
+            
+            .header {
+                padding: 0.5rem 1rem;
+            }
+            
+            .menu-btn, .theme-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 <body class="light-mode">
 
-    <!-- Header -->
-    <header class="header d-flex align-items-center">
-        <a class="btn btn-link menu-btn" data-bs-toggle="offcanvas" href="#offcanvasSidebar" role="button" aria-controls="offcanvasSidebar">
-            <i class="bi bi-list"></i>
-        </a>
-        <div class="flex-grow-1 text-center">
-            <h5 class="mb-0 d-none d-md-block">Bienvenido a la Tienda Platzi</h5>
-        </div>
-        <div style="width: 40px;" class="d-flex align-items-center">
-            <button id="theme-toggle" class="btn btn-link text-white">
-                <i class="bi bi-sun"></i>
+    <!-- NUEVA BARRA SUPERIOR MEJORADA -->
+    <header class="header">
+        <div class="header-container">
+            <button class="btn menu-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+            </button>
+            
+            <div class="text-center">
+                <h1 class="app-title mb-0">ADSO STORE APP</h1>
+            </div>
+            
+            <button id="theme-toggle" class="btn theme-toggle">
+                <i class="bi bi-sun-fill"></i>
             </button>
         </div>
     </header>
@@ -425,7 +439,7 @@
     <div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
         <div class="offcanvas-header sidebar-header">
             <h5 class="offcanvas-title" id="offcanvasSidebarLabel">
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand text-decoration-none" href="/">
                     <i class="bi bi-shop me-2"></i>Tienda Platzi
                 </a>
             </h5>
@@ -434,13 +448,13 @@
         <div class="offcanvas-body p-0">
             <nav class="nav flex-column">
                 <a class="nav-link" href="/">
-                    <i class="bi bi-house-door"></i> Inicio
+                    <i class="bi bi-house-door-fill"></i> Inicio
                 </a>
                 <a class="nav-link" href="/products">
-                    <i class="bi bi-grid-3x3-gap"></i> Productos
+                    <i class="bi bi-grid-3x3-gap-fill"></i> Productos
                 </a>
                 <a class="nav-link" href="/products/create">
-                    <i class="bi bi-plus-circle"></i> Crear Producto
+                    <i class="bi bi-plus-circle-fill"></i> Crear Producto
                 </a>
             </nav>
         </div>
@@ -448,7 +462,17 @@
 
     <!-- Main Content -->
     <main class="container main-content">
-        {% block content %}{% endblock %}
+        {% block content %}
+        <!-- Contenido de ejemplo -->
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center mb-5">
+                    <h2 class="mb-4" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Nuestros Productos</h2>
+                    <p class="text-secondary">Descubre nuestra increíble colección</p>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -460,12 +484,12 @@
         const applyTheme = (theme) => {
             if (theme === 'light') {
                 body.classList.add('light-mode');
-                themeIcon.classList.remove('bi-moon');
-                themeIcon.classList.add('bi-sun');
+                themeIcon.classList.remove('bi-moon-fill');
+                themeIcon.classList.add('bi-sun-fill');
             } else {
                 body.classList.remove('light-mode');
-                themeIcon.classList.remove('bi-sun');
-                themeIcon.classList.add('bi-moon');
+                themeIcon.classList.remove('bi-sun-fill');
+                themeIcon.classList.add('bi-moon-fill');
             }
         };
 
@@ -477,7 +501,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
         });
     </script>

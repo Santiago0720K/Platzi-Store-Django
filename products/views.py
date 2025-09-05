@@ -27,7 +27,12 @@ def product_list(request):
     try:
         categories_response = requests.get(f'{BASE_URL}categories')
         categories_response.raise_for_status()
-        categories = categories_response.json()
+        all_categories = categories_response.json()
+        
+        # Filter categories to include only the desired ones
+        desired_category_names = ["Clothes", "Furniture", "Electronics", "Shoes", "Miscellaneous"]
+        categories = [cat for cat in all_categories if cat.get('name') in desired_category_names]
+        
     except requests.exceptions.RequestException as e:
         print(f"API categories request failed: {e}")
         categories = []
@@ -74,8 +79,10 @@ def product_create(request):
                     response = requests.post(f'{BASE_URL}products/', json=payload)
                     response.raise_for_status()
                     return redirect('product_list')
-                    return redirect('product_list')
                 except requests.exceptions.RequestException as e:
+                    print(f"Error creating product: {e}")
+                    if e.response is not None:
+                        print(f"API Response: {e.response.text}")
                     form.add_error(None, f'Error creating product: {e}')
         else:
             pass
@@ -136,3 +143,13 @@ def product_edit(request, pk):
         form = ProductForm(initial=initial_data)
     
     return render(request, 'products/product_edit.html', {'form': form, 'product': product_data})
+
+def product_delete(request, pk):
+    if request.method == 'POST':
+        try:
+            response = requests.delete(f'{BASE_URL}products/{pk}')
+            response.raise_for_status()  # Raise an exception for bad status codes
+        except requests.exceptions.RequestException as e:
+            print(f"API request failed: {e}")
+    
+    return redirect('product_list')
