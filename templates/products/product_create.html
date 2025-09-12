@@ -205,6 +205,39 @@
         font-size: 0.875em;
         margin-top: 0.25rem;
     }
+
+    .image-upload-options {
+        display: flex;
+        margin-bottom: 1rem;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        border: 2px solid var(--border-color);
+        background: var(--hover-bg);
+    }
+
+    .btn-upload-option {
+        flex: 1;
+        padding: 0.85rem 1rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .btn-upload-option:not(.active):hover {
+        background: var(--card-bg);
+        color: var(--text-primary);
+    }
+
+    .btn-upload-option.active {
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 170, 255, 0.2);
+        transform: scale(1.05);
+    }
 </style>
 
 <div class="create-container">
@@ -277,6 +310,7 @@
 
         <!-- Imagen -->
         <div class="form-group">
+<<<<<<< HEAD
             <label class="form-label"><i class="bi bi-image"></i> {{ form.image.label }}</label>
 
             <!-- Selector de tipo de imagen -->
@@ -296,6 +330,19 @@
                 <div id="drop-zone" class="image-upload">
                     <p>Arrastra una imagen o haz clic para seleccionarla</p>
                     <img id="preview-image-file" class="preview-image" alt="Vista previa">
+=======
+            <label class="form-label"><i class="bi bi-image"></i> Imagen del Producto</label>
+            
+            <div class="image-upload-options">
+                <button type="button" id="upload-file-btn" class="btn-upload-option active">Subir Archivo</button>
+                <button type="button" id="upload-url-btn" class="btn-upload-option">Usar URL</button>
+            </div>
+
+            <div id="drop-zone-wrapper">
+                <div id="drop-zone" class="image-upload">
+                    <p>Arrastra una imagen o haz clic para seleccionarla</p>
+                    <img id="preview-image" alt="Vista previa">
+>>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
                 </div>
                 {{ form.image }}
                 {% for error in form.image.errors %}
@@ -303,6 +350,7 @@
                 {% endfor %}
             </div>
 
+<<<<<<< HEAD
             <!-- Opción para URL -->
             <div id="url-container" style="display: none;">
                 {{ form.image_url }}
@@ -310,6 +358,16 @@
                 {% for error in form.image_url.errors %}
                     <div class="error-message">{{ error }}</div>
                 {% endfor %}
+=======
+            <div id="url-wrapper" style="display: none;">
+                <div class="form-group">
+                    <label for="{{ form.image_url.id_for_label }}" class="form-label"><i class="bi bi-link-45deg"></i> {{ form.image_url.label }}</label>
+                    {{ form.image_url }}
+                    {% for error in form.image_url.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+>>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
             </div>
         </div>
 
@@ -335,10 +393,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewImageFile = document.getElementById('preview-image-file');
     const previewImageUrl = document.getElementById('preview-image-url');
     const dropText = dropZone.querySelector('p');
+    const uploadFileBtn = document.getElementById('upload-file-btn');
+    const uploadUrlBtn = document.getElementById('upload-url-btn');
+    const dropZoneWrapper = document.getElementById('drop-zone-wrapper');
+    const urlWrapper = document.getElementById('url-wrapper');
+    const imageUrlInput = document.querySelector('input[name="image_url"]');
 
     // --- INICIALIZACIÓN ---
     imageInput.style.display = 'none'; // Ocultar el input de archivo real
 
+<<<<<<< HEAD
     // --- MANEJO DE VISIBILIDAD ---
     imageSourceRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
@@ -360,6 +424,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- MANEJO DE SUBIDA DE ARCHIVO ---
+=======
+    uploadFileBtn.addEventListener('click', () => {
+        uploadFileBtn.classList.add('active');
+        uploadUrlBtn.classList.remove('active');
+        dropZoneWrapper.style.display = 'block';
+        urlWrapper.style.display = 'none';
+        imageUrlInput.value = ''; // Clear URL input
+    });
+
+    uploadUrlBtn.addEventListener('click', () => {
+        uploadUrlBtn.classList.add('active');
+        uploadFileBtn.classList.remove('active');
+        urlWrapper.style.display = 'block';
+        dropZoneWrapper.style.display = 'none';
+        imageInput.value = ''; // Clear file input
+        previewImage.style.display = 'none';
+        dropText.style.display = 'block';
+    });
+
+    // Manejo de archivos
+>>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
     function handleFile(file) {
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
