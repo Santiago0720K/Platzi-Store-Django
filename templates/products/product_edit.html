@@ -229,32 +229,59 @@
             {% endfor %}
         </div>
 
-        <!-- Imagen actual -->
-        {% if product.images.0 %}
+        <!-- Campo: Categoría (deshabilitado) -->
+        <div class="form-group">
+            <label for="{{ form.categoryId.id_for_label }}" class="form-label">Categoría</label>
+            {{ form.categoryId }}
+            {% for error in form.categoryId.errors %}
+                <div class="error-message">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Imagen -->
+        <div class="form-group">
+            <label class="form-label"><i class="bi bi-image"></i> Imagen</label>
+
+            <!-- Imagen Actual -->
+            {% if product.images.0 %}
             <div class="image-preview-container">
                 <span class="image-label">Imagen Actual</span>
                 <img src="{{ product.images.0 }}" alt="Imagen actual de {{ product.title }}" class="current-image">
             </div>
-        {% endif %}
+            {% endif %}
 
-        <!-- Subir nueva imagen -->
-        <div class="form-group">
-            <label class="form-label">Cambiar Imagen</label>
-            <div class="change-image-container" id="image-drop-zone">
-                <p>Arrastra y suelta una nueva imagen aquí, o haz clic para seleccionar una.</p>
-                <button type="button" class="change-image-btn" id="choose-image-btn">Seleccionar Imagen</button>
-                {{ form.image }}
-                <input 
-                    type="url" 
-                    id="image-url" 
-                    placeholder="O pega una URL de imagen" 
-                    class="form-control" 
-                    style="margin-top:10px;">
-                <img id="image-preview" alt="Vista previa">
+            <!-- Selector de tipo de imagen -->
+            <div class="image-source-selector">
+                <label>
+                    <input type="radio" name="image_source" value="file" checked>
+                    Subir archivo
+                </label>
+                <label>
+                    <input type="radio" name="image_source" value="url">
+                    Usar URL
+                </label>
             </div>
-            {% for error in form.image.errors %}
-                <div class="error-message">{{ error }}</div>
-            {% endfor %}
+
+            <!-- Opción para subir archivo -->
+            <div id="upload-container">
+                <div id="drop-zone" class="image-upload">
+                    <p>Arrastra una imagen o haz clic para seleccionarla</p>
+                    <img id="preview-image-file" class="preview-image" alt="Vista previa">
+                </div>
+                {{ form.image }}
+                {% for error in form.image.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Opción para URL -->
+            <div id="url-container" style="display: none;">
+                {{ form.image_url }}
+                <img id="preview-image-url" class="preview-image" alt="Vista previa de URL" style="margin-top: 1rem; border-radius: 0.75rem; max-height: 200px;">
+                {% for error in form.image_url.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- Botones -->
@@ -266,45 +293,77 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const dropZone = document.getElementById('image-drop-zone');
-    const imageInput = document.getElementById('id_image_input');
-    const imageUrlInput = document.getElementById('image-url');
-    const imagePreview = document.getElementById('image-preview');
-    const chooseImageBtn = document.getElementById('choose-image-btn');
+document.addEventListener('DOMContentLoaded', () => {
+    // --- SELECTORES ---
+    const imageSourceRadios = document.querySelectorAll('input[name="image_source"]');
+    const uploadContainer = document.getElementById('upload-container');
+    const urlContainer = document.getElementById('url-container');
+    
+    const dropZone = document.getElementById('drop-zone');
+    const imageInput = document.querySelector('input[type="file"][name="image"]');
+    const imageUrlInput = document.querySelector('input[name="image_url"]');
+    
+    const previewImageFile = document.getElementById('preview-image-file');
+    const previewImageUrl = document.getElementById('preview-image-url');
+    const dropText = dropZone.querySelector('p');
 
-    function showPreview(src) {
-        imagePreview.src = src;
-        imagePreview.style.display = 'block';
+    // --- INICIALIZACIÓN ---
+    imageInput.style.display = 'none'; // Ocultar el input de archivo real
+
+    // Si hay una URL de imagen inicial, selecciona la opción de URL
+    if (imageUrlInput.value) {
+        document.querySelector('input[name="image_source"][value="url"]').checked = true;
+        uploadContainer.style.display = 'none';
+        urlContainer.style.display = 'block';
+        previewImageUrl.src = imageUrlInput.value;
+        previewImageUrl.style.display = 'block';
     }
 
+    // --- MANEJO DE VISIBILIDAD ---
+    imageSourceRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'file') {
+                uploadContainer.style.display = 'block';
+                urlContainer.style.display = 'none';
+            } else {
+                uploadContainer.style.display = 'none';
+                urlContainer.style.display = 'block';
+            }
+        });
+    });
+
+    // --- MANEJO DE SUBIDA DE ARCHIVO ---
     function handleFile(file) {
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
-            reader.onload = (e) => showPreview(e.target.result);
+            reader.onload = e => {
+                previewImageFile.src = e.target.result;
+                previewImageFile.style.display = 'block';
+                dropText.style.display = 'none';
+            };
             reader.readAsDataURL(file);
         } else {
-            alert('Por favor selecciona un archivo de imagen válido.');
+            alert('Por favor selecciona una imagen válida.');
         }
     }
 
-    chooseImageBtn.addEventListener('click', () => imageInput.click());
-
+    dropZone.addEventListener('click', () => imageInput.click());
     imageInput.addEventListener('change', () => {
-        if (imageInput.files.length > 0) handleFile(imageInput.files[0]);
+        if (imageInput.files.length > 0) {
+            handleFile(imageInput.files[0]);
+        }
     });
 
-    dropZone.addEventListener('dragover', (e) => {
+    // Drag & Drop
+    dropZone.addEventListener('dragover', e => {
         e.preventDefault();
         dropZone.classList.add('dragover');
     });
-
-    dropZone.addEventListener('dragleave', (e) => {
+    dropZone.addEventListener('dragleave', e => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
     });
-
-    dropZone.addEventListener('drop', (e) => {
+    dropZone.addEventListener('drop', e => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
         if (e.dataTransfer.files.length > 0) {
@@ -313,11 +372,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // --- MANEJO DE URL ---
     imageUrlInput.addEventListener('input', () => {
         const url = imageUrlInput.value.trim();
         if (url) {
-            showPreview(url);
+            previewImageUrl.src = url;
+            previewImageUrl.style.display = 'block';
+        } else {
+            previewImageUrl.style.display = 'none';
         }
+    });
+
+    // Para validar la imagen de la URL al perder el foco
+    imageUrlInput.addEventListener('blur', () => {
+        const img = new Image();
+        img.onload = () => { 
+            imageUrlInput.setCustomValidity(''); 
+        };
+        img.onerror = () => {
+            if(imageUrlInput.value) {
+                imageUrlInput.setCustomValidity('La URL de la imagen no es válida o no se puede acceder a ella.');
+                imageUrlInput.reportValidity();
+            } else {
+                imageUrlInput.setCustomValidity('');
+            }
+        };
+        img.src = imageUrlInput.value;
     });
 });
 </script>

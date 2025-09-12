@@ -278,14 +278,39 @@
         <!-- Imagen -->
         <div class="form-group">
             <label class="form-label"><i class="bi bi-image"></i> {{ form.image.label }}</label>
-            <div id="drop-zone" class="image-upload">
-                <p>Arrastra una imagen o haz clic para seleccionarla</p>
-                <img id="preview-image" alt="Vista previa">
+
+            <!-- Selector de tipo de imagen -->
+            <div class="image-source-selector">
+                <label>
+                    <input type="radio" name="image_source" value="file" checked>
+                    Subir archivo
+                </label>
+                <label>
+                    <input type="radio" name="image_source" value="url">
+                    Usar URL
+                </label>
             </div>
-            {{ form.image }}
-            {% for error in form.image.errors %}
-                <div class="error-message">{{ error }}</div>
-            {% endfor %}
+
+            <!-- Opción para subir archivo -->
+            <div id="upload-container">
+                <div id="drop-zone" class="image-upload">
+                    <p>Arrastra una imagen o haz clic para seleccionarla</p>
+                    <img id="preview-image-file" class="preview-image" alt="Vista previa">
+                </div>
+                {{ form.image }}
+                {% for error in form.image.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Opción para URL -->
+            <div id="url-container" style="display: none;">
+                {{ form.image_url }}
+                <img id="preview-image-url" class="preview-image" alt="Vista previa de URL" style="margin-top: 1rem; border-radius: 0.75rem; max-height: 200px;">
+                {% for error in form.image_url.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- Botones -->
@@ -298,20 +323,49 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // --- SELECTORES ---
+    const imageSourceRadios = document.querySelectorAll('input[name="image_source"]');
+    const uploadContainer = document.getElementById('upload-container');
+    const urlContainer = document.getElementById('url-container');
+    
     const dropZone = document.getElementById('drop-zone');
     const imageInput = document.querySelector('input[type="file"][name="image"]');
-    const previewImage = document.getElementById('preview-image');
+    const imageUrlInput = document.querySelector('input[name="image_url"]');
+    
+    const previewImageFile = document.getElementById('preview-image-file');
+    const previewImageUrl = document.getElementById('preview-image-url');
     const dropText = dropZone.querySelector('p');
 
-    imageInput.style.display = 'none';
+    // --- INICIALIZACIÓN ---
+    imageInput.style.display = 'none'; // Ocultar el input de archivo real
 
-    // Manejo de archivos
+    // --- MANEJO DE VISIBILIDAD ---
+    imageSourceRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'file') {
+                uploadContainer.style.display = 'block';
+                urlContainer.style.display = 'none';
+                imageUrlInput.value = ''; // Limpiar URL si se cambia a archivo
+                previewImageUrl.src = '';
+                previewImageUrl.style.display = 'none';
+            } else {
+                uploadContainer.style.display = 'none';
+                urlContainer.style.display = 'block';
+                imageInput.value = ''; // Limpiar archivo si se cambia a URL
+                previewImageFile.src = '';
+                previewImageFile.style.display = 'none';
+                dropText.style.display = 'block';
+            }
+        });
+    });
+
+    // --- MANEJO DE SUBIDA DE ARCHIVO ---
     function handleFile(file) {
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = e => {
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
+                previewImageFile.src = e.target.result;
+                previewImageFile.style.display = 'block';
                 dropText.style.display = 'none';
             };
             reader.readAsDataURL(file);
@@ -320,33 +374,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Click para seleccionar
     dropZone.addEventListener('click', () => imageInput.click());
-
-    // Cambio desde el input
     imageInput.addEventListener('change', () => {
         if (imageInput.files.length > 0) {
             handleFile(imageInput.files[0]);
         }
     });
 
-    // Drag & drop
+    // Drag & Drop
     dropZone.addEventListener('dragover', e => {
         e.preventDefault();
         dropZone.classList.add('dragover');
     });
-
     dropZone.addEventListener('dragleave', e => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
     });
-
     dropZone.addEventListener('drop', e => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
         if (e.dataTransfer.files.length > 0) {
+            imageInput.files = e.dataTransfer.files;
             handleFile(e.dataTransfer.files[0]);
         }
+    });
+
+    // --- MANEJO DE URL ---
+    imageUrlInput.addEventListener('input', () => {
+        const url = imageUrlInput.value.trim();
+        if (url) {
+            previewImageUrl.src = url;
+            previewImageUrl.style.display = 'block';
+        } else {
+            previewImageUrl.style.display = 'none';
+        }
+    });
+
+    // Para validar la imagen de la URL al perder el foco
+    imageUrlInput.addEventListener('blur', () => {
+        const img = new Image();
+        img.onload = () => { 
+            // La imagen es válida
+            imageUrlInput.setCustomValidity(''); 
+        };
+        img.onerror = () => {
+            // La imagen no es válida o no se puede cargar
+            if(imageUrlInput.value) {
+                imageUrlInput.setCustomValidity('La URL de la imagen no es válida o no se puede acceder a ella.');
+                // Forzar la validación del navegador para que muestre el mensaje
+                imageUrlInput.reportValidity();
+            } else {
+                imageUrlInput.setCustomValidity('');
+            }
+        };
+        img.src = imageUrlInput.value;
     });
 });
 </script>

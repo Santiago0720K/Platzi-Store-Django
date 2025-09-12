@@ -1,0 +1,415 @@
+{% extends "base.html" %}
+
+{% block title %}Sesión Cerrada - ADSO Store{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center min-vh-100 align-items-center">
+    <div class="col-lg-5 col-md-7 col-sm-9">
+        <div class="modern-card animate-fade-up">
+            <div class="card-body p-5 text-center">
+                <!-- Icono animado de despedida -->
+                <div class="logout-icon mb-4">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-box-arrow-right" style="font-size: 4rem; color: var(--accent-blue);"></i>
+                        <div class="success-check">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje principal -->
+                <h2 class="card-title mb-3" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">
+                    ¡Hasta Pronto!
+                </h2>
+                
+                <div class="mb-4">
+                    <p class="lead text-primary mb-2">Has cerrado sesión exitosamente</p>
+                    <p class="text-secondary">Gracias por usar ADSO Store. Tu sesión se ha cerrado de forma segura.</p>
+                </div>
+
+                <!-- Estadísticas de sesión (opcional) -->
+                <div class="session-stats mb-4 p-3 rounded-3" style="background: var(--hover-bg); border: 1px solid var(--border-color);">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <i class="bi bi-clock-fill text-info mb-2" style="font-size: 1.5rem;"></i>
+                            <div class="small text-secondary">Tiempo de sesión</div>
+                            <div class="fw-semibold" id="sessionTime">--:--</div>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-shield-check text-success mb-2" style="font-size: 1.5rem;"></i>
+                            <div class="small text-secondary">Estado</div>
+                            <div class="fw-semibold text-success">Seguro</div>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-person-check-fill text-primary mb-2" style="font-size: 1.5rem;"></i>
+                            <div class="small text-secondary">Datos</div>
+                            <div class="fw-semibold text-primary">Protegidos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="d-grid gap-2 mb-4">
+                    <a href="{% url 'accounts:login' %}" class="btn btn-modern-primary py-3" style="font-size: 1.1rem; font-weight: 600;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Iniciar Sesión de Nuevo
+                    </a>
+                    <a href="/" class="btn btn-modern-secondary">
+                        <i class="bi bi-house-fill me-2"></i>
+                        Ir al Inicio
+                    </a>
+                </div>
+
+                <!-- Enlaces útiles -->
+                <div class="useful-links">
+                    <div class="divider-with-text mb-3">
+                        <span class="divider-text">Enlaces útiles</span>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <a href="/products" class="link-item">
+                                <i class="bi bi-grid-3x3-gap-fill me-2"></i>
+                                Ver Productos
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'accounts:register' %}" class="link-item">
+                                <i class="bi bi-person-plus-fill me-2"></i>
+                                Crear Cuenta
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="link-item">
+                                <i class="bi bi-question-circle-fill me-2"></i>
+                                Ayuda
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="link-item">
+                                <i class="bi bi-telephone-fill me-2"></i>
+                                Contacto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje de seguridad -->
+        <div class="security-note mt-4 p-3 rounded-3 text-center" style="background: rgba(40, 167, 69, 0.1); border: 1px solid rgba(40, 167, 69, 0.3);">
+            <i class="bi bi-info-circle-fill text-success me-2"></i>
+            <small class="text-success">
+                <strong>Tip de Seguridad:</strong> Siempre cierra sesión al usar dispositivos compartidos
+            </small>
+        </div>
+
+        <!-- Próximos pasos sugeridos -->
+        <div class="next-steps mt-4">
+            <h6 class="text-center mb-3" style="color: var(--text-primary);">¿Qué te gustaría hacer ahora?</h6>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <a href="/products" class="text-decoration-none">
+                            <i class="bi bi-shop text-primary mb-2" style="font-size: 2rem;"></i>
+                            <h6 class="text-primary">Explorar</h6>
+                            <small class="text-secondary">Descubre nuestros productos</small>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+                            <i class="bi bi-person-circle text-info mb-2" style="font-size: 2rem;"></i>
+                            <h6 class="text-primary">Conectar</h6>
+                            <small class="text-secondary">Inicia sesión nuevamente</small>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <a href="{% url 'accounts:register' %}" class="text-decoration-none">
+                            <i class="bi bi-plus-circle text-success mb-2" style="font-size: 2rem;"></i>
+                            <h6 class="text-primary">Registrar</h6>
+                            <small class="text-secondary">Crea una nueva cuenta</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos para la página de logout */
+.logout-icon {
+    position: relative;
+    display: inline-block;
+    animation: slideOut 1s ease-out;
+}
+
+.icon-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.success-check {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--card-bg);
+    border-radius: 50%;
+    padding: 2px;
+    animation: checkAppear 0.5s ease-out 1s both;
+    opacity: 0;
+}
+
+@keyframes slideOut {
+    0% { 
+        transform: translateX(0) scale(1); 
+        opacity: 1; 
+    }
+    50% { 
+        transform: translateX(20px) scale(0.9); 
+        opacity: 0.7; 
+    }
+    100% { 
+        transform: translateX(0) scale(1); 
+        opacity: 1; 
+    }
+}
+
+@keyframes checkAppear {
+    0% { 
+        opacity: 0; 
+        transform: scale(0) rotate(180deg); 
+    }
+    50% { 
+        transform: scale(1.2) rotate(0deg); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1) rotate(0deg); 
+    }
+}
+
+.session-stats {
+    transition: all 0.3s ease;
+}
+
+.session-stats:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.link-item {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.link-item:hover {
+    color: var(--accent-blue);
+    background: var(--hover-bg);
+    transform: translateY(-1px);
+}
+
+.step-card {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-blue);
+}
+
+.step-card a {
+    display: block;
+    height: 100%;
+}
+
+.divider-with-text {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider-with-text::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.divider-text {
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
+}
+
+.security-note {
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.next-steps {
+    animation: fadeInUp 0.8s ease-out 0.7s both;
+    opacity: 0;
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 2rem !important;
+    }
+    
+    .logout-icon i {
+        font-size: 3rem !important;
+    }
+    
+    .session-stats .row > div {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .step-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .link-item {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Efecto de particles de fondo */
+.logout-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 2s infinite;
+    z-index: -1;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.3;
+    }
+}
+</style>
+
+<script>
+// Simular tiempo de sesión (esto normalmente vendría del backend)
+document.addEventListener('DOMContentLoaded', function() {
+    const sessionTimeElement = document.getElementById('sessionTime');
+    
+    // Generar un tiempo de sesión aleatorio para demostración
+    const hours = Math.floor(Math.random() * 3);
+    const minutes = Math.floor(Math.random() * 60);
+    
+    sessionTimeElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    
+    // Animación de contador hacia atrás para logout
+    setTimeout(() => {
+        sessionTimeElement.textContent = '00:00';
+    }, 2000);
+});
+
+// Mensaje de despedida personalizado basado en la hora
+function getTimeBasedGreeting() {
+    const hour = new Date().getHours();
+    
+    if (hour < 12) {
+        return '¡Que tengas un buen día!';
+    } else if (hour < 18) {
+        return '¡Que tengas una buena tarde!';
+    } else {
+        return '¡Que tengas una buena noche!';
+    }
+}
+
+// Aplicar saludo personalizado
+setTimeout(() => {
+    const greeting = document.querySelector('.lead');
+    if (greeting) {
+        greeting.innerHTML += '<br><small class="text-secondary">' + getTimeBasedGreeting() + '</small>';
+    }
+}, 1500);
+
+// Efecto de confetti al cargar (opcional)
+function createConfetti() {
+    const colors = ['#00d4ff', '#6366f1', '#00f5ff'];
+    const confettiCount = 50;
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = '50%';
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.top = '-10px';
+        confetti.style.opacity = '0.8';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '9999';
+        
+        document.body.appendChild(confetti);
+        
+        const fallDuration = Math.random() * 2000 + 1000;
+        const horizontalMovement = (Math.random() - 0.5) * 100;
+        
+        confetti.animate([
+            { transform: 'translateY(0px) translateX(0px) rotate(0deg)', opacity: 0.8 },
+            { transform: `translateY(${window.innerHeight + 20}px) translateX(${horizontalMovement}px) rotate(360deg)`, opacity: 0 }
+        ], {
+            duration: fallDuration,
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        }).onfinish = () => {
+            confetti.remove();
+        };
+    }
+}
+
+// Activar confetti después de 500ms
+setTimeout(createConfetti, 500);
+</script>
+{% endblock %}

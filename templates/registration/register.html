@@ -1,0 +1,496 @@
+{% extends "base.html" %}
+
+{% block title %}Registro de Usuario - ADSO Store{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center min-vh-100 align-items-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="modern-card animate-fade-up">
+            <div class="card-body p-5">
+                <!-- Header con icono -->
+                <div class="text-center mb-4">
+                    <div class="register-icon mb-3">
+                        <i class="bi bi-person-plus-fill" style="font-size: 4rem; color: var(--accent-purple);"></i>
+                    </div>
+                    <h2 class="card-title mb-2" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">
+                        Crear Cuenta
+                    </h2>
+                    <p class="text-secondary">Únete a nuestra comunidad</p>
+                </div>
+
+                <!-- Formulario mejorado -->
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Mostrar errores del formulario -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert" style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3); color: #dc3545;">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Error:</strong> Por favor corrige los errores a continuación.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <!-- Campo Nombre de Usuario -->
+                        <div class="col-12 mb-3">
+                            <div class="form-floating">
+                                <input type="text" 
+                                       class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                                       id="id_username" 
+                                       name="username" 
+                                       placeholder="Nombre de Usuario"
+                                       value="{{ form.username.value|default:'' }}"
+                                       required>
+                                <label for="id_username">
+                                    <i class="bi bi-person-fill me-2"></i>Nombre de Usuario
+                                </label>
+                                {% if form.username.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.username.errors.0 }}
+                                    </div>
+                                {% else %}
+                                    <div class="form-text text-secondary small">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        150 caracteres o menos. Solo letras, dígitos y @/./+/-/_.
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Campo Email -->
+                        <div class="col-12 mb-3">
+                            <div class="form-floating">
+                                <input type="email" 
+                                       class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
+                                       id="id_email" 
+                                       name="email" 
+                                       placeholder="Correo Electrónico"
+                                       value="{{ form.email.value|default:'' }}"
+                                       required>
+                                <label for="id_email">
+                                    <i class="bi bi-envelope-fill me-2"></i>Correo Electrónico
+                                </label>
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.email.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Campo Nombre -->
+                        {% if form.first_name %}
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                <input type="text" 
+                                       class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" 
+                                       id="id_first_name" 
+                                       name="first_name" 
+                                       placeholder="Nombre"
+                                       value="{{ form.first_name.value|default:'' }}">
+                                <label for="id_first_name">
+                                    <i class="bi bi-person-badge-fill me-2"></i>Nombre
+                                </label>
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.first_name.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Campo Apellido -->
+                        {% if form.last_name %}
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                <input type="text" 
+                                       class="form-control {% if form.last_name.errors %}is-invalid{% endif %}" 
+                                       id="id_last_name" 
+                                       name="last_name" 
+                                       placeholder="Apellido"
+                                       value="{{ form.last_name.value|default:'' }}">
+                                <label for="id_last_name">
+                                    <i class="bi bi-person-badge-fill me-2"></i>Apellido
+                                </label>
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.last_name.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Campo Contraseña -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating position-relative">
+                                <input type="password" 
+                                       class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
+                                       id="id_password1" 
+                                       name="password1" 
+                                       placeholder="Contraseña"
+                                       required>
+                                <label for="id_password1">
+                                    <i class="bi bi-lock-fill me-2"></i>Contraseña
+                                </label>
+                                <button type="button" 
+                                        class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3" 
+                                        style="border: none; background: none; color: var(--text-secondary); z-index: 10;"
+                                        onclick="togglePassword('id_password1', 'toggleIcon1')">
+                                    <i class="bi bi-eye-fill" id="toggleIcon1"></i>
+                                </button>
+                                {% if form.password1.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.password1.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Campo Confirmar Contraseña -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating position-relative">
+                                <input type="password" 
+                                       class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
+                                       id="id_password2" 
+                                       name="password2" 
+                                       placeholder="Confirmar Contraseña"
+                                       required>
+                                <label for="id_password2">
+                                    <i class="bi bi-lock-check-fill me-2"></i>Confirmar Contraseña
+                                </label>
+                                <button type="button" 
+                                        class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3" 
+                                        style="border: none; background: none; color: var(--text-secondary); z-index: 10;"
+                                        onclick="togglePassword('id_password2', 'toggleIcon2')">
+                                    <i class="bi bi-eye-fill" id="toggleIcon2"></i>
+                                </button>
+                                {% if form.password2.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.password2.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Indicador de fuerza de contraseña -->
+                    <div class="mb-3">
+                        <div class="password-strength-meter">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <small class="text-secondary" id="passwordStrengthText">Escribe una contraseña para ver su fortaleza</small>
+                    </div>
+
+                    <!-- Términos y condiciones -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                        <label class="form-check-label text-secondary" for="acceptTerms">
+                            Acepto los 
+                            <a href="#" class="text-decoration-none" style="color: var(--accent-blue);">términos y condiciones</a> 
+                            y la 
+                            <a href="#" class="text-decoration-none" style="color: var(--accent-blue);">política de privacidad</a>
+                        </label>
+                        <div class="invalid-feedback">
+                            Debes aceptar los términos y condiciones.
+                        </div>
+                    </div>
+
+                    <!-- Botón de envío -->
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-modern-primary py-3" style="font-size: 1.1rem; font-weight: 600;">
+                            <i class="bi bi-person-plus-fill me-2"></i>
+                            Crear Mi Cuenta
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Enlaces adicionales -->
+                <div class="text-center">
+                    <div class="divider-with-text mb-3">
+                        <span class="divider-text">o</span>
+                    </div>
+                    
+                    <p class="text-secondary mb-0">
+                        ¿Ya tienes una cuenta? 
+                        <a href="{% url 'accounts:login' %}" class="text-decoration-none fw-semibold" style="color: var(--accent-purple);">
+                            Inicia Sesión
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beneficios del registro -->
+        <div class="row mt-4 g-3">
+            <div class="col-md-4 text-center">
+                <div class="benefit-card p-3 rounded-3" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                    <i class="bi bi-gift-fill text-success mb-2" style="font-size: 2rem;"></i>
+                    <h6 class="text-primary">Ofertas Exclusivas</h6>
+                    <small class="text-secondary">Accede a descuentos especiales</small>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="benefit-card p-3 rounded-3" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                    <i class="bi bi-truck text-info mb-2" style="font-size: 2rem;"></i>
+                    <h6 class="text-primary">Envío Rápido</h6>
+                    <small class="text-secondary">Entrega en tiempo récord</small>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="benefit-card p-3 rounded-3" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                    <i class="bi bi-headset text-warning mb-2" style="font-size: 2rem;"></i>
+                    <h6 class="text-primary">Soporte 24/7</h6>
+                    <small class="text-secondary">Ayuda cuando la necesites</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos adicionales para el registro */
+.register-icon {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.password-strength-meter {
+    width: 100%;
+    height: 8px;
+    background-color: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.benefit-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-blue);
+}
+
+.form-floating > label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: var(--accent-blue);
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 212, 255, 0.15);
+    border-color: var(--accent-blue);
+}
+
+.divider-with-text {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider-with-text::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.divider-text {
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
+}
+
+.alert {
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 2rem !important;
+    }
+    
+    .register-icon i {
+        font-size: 3rem !important;
+    }
+    
+    .benefit-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+<script>
+function togglePassword(fieldId, iconId) {
+    const passwordField = document.getElementById(fieldId);
+    const toggleIcon = document.getElementById(iconId);
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('bi-eye-fill');
+        toggleIcon.classList.add('bi-eye-slash-fill');
+    } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('bi-eye-slash-fill');
+        toggleIcon.classList.add('bi-eye-fill');
+    }
+}
+
+// Medidor de fuerza de contraseña
+function checkPasswordStrength(password) {
+    let strength = 0;
+    let feedback = [];
+
+    if (password.length >= 8) strength++;
+    else feedback.push('al menos 8 caracteres');
+
+    if (/[a-z]/.test(password)) strength++;
+    else feedback.push('letras minúsculas');
+
+    if (/[A-Z]/.test(password)) strength++;
+    else feedback.push('letras mayúsculas');
+
+    if (/[0-9]/.test(password)) strength++;
+    else feedback.push('números');
+
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    else feedback.push('caracteres especiales');
+
+    return { strength, feedback };
+}
+
+document.getElementById('id_password1').addEventListener('input', function() {
+    const password = this.value;
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthText = document.getElementById('passwordStrengthText');
+    
+    if (password === '') {
+        strengthBar.style.width = '0%';
+        strengthText.textContent = 'Escribe una contraseña para ver su fortaleza';
+        return;
+    }
+    
+    const { strength, feedback } = checkPasswordStrength(password);
+    const percentage = (strength / 5) * 100;
+    
+    strengthBar.style.width = percentage + '%';
+    
+    let color, text;
+    if (strength <= 2) {
+        color = '#dc3545';
+        text = 'Débil';
+    } else if (strength <= 3) {
+        color = '#ffc107';
+        text = 'Media';
+    } else if (strength <= 4) {
+        color = '#28a745';
+        text = 'Fuerte';
+    } else {
+        color = '#20c997';
+        text = 'Muy Fuerte';
+    }
+    
+    strengthBar.style.backgroundColor = color;
+    strengthText.textContent = `Contraseña ${text}`;
+    strengthText.style.color = color;
+    
+    if (feedback.length > 0) {
+        strengthText.textContent += ` - Necesita: ${feedback.join(', ')}`;
+    }
+    
+});
+ // Helper function to calculate password strength
+  function calculatePasswordStrength(password) {
+    let score = 0;
+    let message = 'Muy débil';
+    let className = 'bg-danger';
+    let textClass = 'text-danger';
+
+    if (password.length >= 8) score += 25;
+    if (password.match(/[a-z]/)) score += 25;
+    if (password.match(/[A-Z]/)) score += 25;
+    if (password.match(/[0-9]/)) score += 12.5;
+    if (password.match(/[^a-zA-Z0-9]/)) score += 12.5;
+
+    if (score >= 75) {
+      message = 'Muy fuerte';
+      className = 'bg-success';
+      textClass = 'text-success';
+    } else if (score >= 50) {
+      message = 'Fuerte';
+      className = 'bg-info';
+      textClass = 'text-info';
+    } else if (score >= 25) {
+      message = 'Débil';
+      className = 'bg-warning';
+      textClass = 'text-warning';
+    }
+
+    return {
+      percentage: Math.min(100, score),
+      message: message,
+      class: className,
+      textClass: textClass
+    };
+  }
+
+// Validación del formulario
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Verificar que las contraseñas coincidan
+document.getElementById('id_password2').addEventListener('input', function() {
+    const password1 = document.getElementById('id_password1').value;
+    const password2 = this.value;
+    
+    if (password2 !== '' && password1 !== password2) {
+        this.setCustomValidity('Las contraseñas no coinciden');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+</script>
+{% endblock %}
