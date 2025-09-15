@@ -16,33 +16,18 @@ class ProductForm(forms.Form):
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'id': 'id_image_input', 'style': 'display: none;'}))
     image_url = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'O ingrese la URL de la imagen'}))
 
-<<<<<<< HEAD
     def __init__(self, *args, **kwargs):
+        categories = kwargs.pop('categories', None)
         is_edit = kwargs.pop('is_edit', False)
-=======
-    def __init__(self, *args, categories=None, **kwargs):
->>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
         super().__init__(*args, **kwargs)
         self.fields['image'].label = "Imagen del Producto"
         self.fields['image_url'].label = "URL de la Imagen (Opcional)"
         self.fields['categoryId'].label = "Categoría"
 
-<<<<<<< HEAD
-        # Fetch categories from API
-        try:
-            response = requests.get(f"{BASE_URL}categories")
-            response.raise_for_status()
-            categories = response.json()
-=======
         if categories:
->>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
             self.fields['categoryId'].choices = [(c['id'], c['name']) for c in categories]
         else:
             self.fields['categoryId'].choices = []
-<<<<<<< HEAD
-            self.fields['categoryId'].label = "Categoría (Error al cargar)"
-=======
->>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
             self.add_error(None, "No se pudieron cargar las categorías. Intente de nuevo más tarde.")
 
         if is_edit:
