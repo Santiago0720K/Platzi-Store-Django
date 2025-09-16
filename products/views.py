@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 import requests
 from .forms import ProductForm
 
@@ -54,6 +55,7 @@ def product_detail(request, pk):
     
     return render(request, 'products/product_detail.html', {'product': product})
 
+@login_required(login_url='accounts:login')
 def product_create(request):
     categories = get_all_categories()
     if categories is None:
