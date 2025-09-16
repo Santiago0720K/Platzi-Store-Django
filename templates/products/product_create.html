@@ -27,6 +27,7 @@
         font-weight: bold;
         background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.5rem;
     }
@@ -88,7 +89,7 @@
         background: var(--hover-bg);
     }
 
-    .image-upload img {
+    .image-upload img, #preview-image-url {
         max-width: 100%;
         max-height: 200px;
         margin-top: 1rem;
@@ -310,27 +311,6 @@
 
         <!-- Imagen -->
         <div class="form-group">
-<<<<<<< HEAD
-            <label class="form-label"><i class="bi bi-image"></i> {{ form.image.label }}</label>
-
-            <!-- Selector de tipo de imagen -->
-            <div class="image-source-selector">
-                <label>
-                    <input type="radio" name="image_source" value="file" checked>
-                    Subir archivo
-                </label>
-                <label>
-                    <input type="radio" name="image_source" value="url">
-                    Usar URL
-                </label>
-            </div>
-
-            <!-- Opción para subir archivo -->
-            <div id="upload-container">
-                <div id="drop-zone" class="image-upload">
-                    <p>Arrastra una imagen o haz clic para seleccionarla</p>
-                    <img id="preview-image-file" class="preview-image" alt="Vista previa">
-=======
             <label class="form-label"><i class="bi bi-image"></i> Imagen del Producto</label>
             
             <div class="image-upload-options">
@@ -342,7 +322,6 @@
                 <div id="drop-zone" class="image-upload">
                     <p>Arrastra una imagen o haz clic para seleccionarla</p>
                     <img id="preview-image" alt="Vista previa">
->>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
                 </div>
                 {{ form.image }}
                 {% for error in form.image.errors %}
@@ -350,24 +329,15 @@
                 {% endfor %}
             </div>
 
-<<<<<<< HEAD
-            <!-- Opción para URL -->
-            <div id="url-container" style="display: none;">
-                {{ form.image_url }}
-                <img id="preview-image-url" class="preview-image" alt="Vista previa de URL" style="margin-top: 1rem; border-radius: 0.75rem; max-height: 200px;">
-                {% for error in form.image_url.errors %}
-                    <div class="error-message">{{ error }}</div>
-                {% endfor %}
-=======
             <div id="url-wrapper" style="display: none;">
                 <div class="form-group">
                     <label for="{{ form.image_url.id_for_label }}" class="form-label"><i class="bi bi-link-45deg"></i> {{ form.image_url.label }}</label>
                     {{ form.image_url }}
+                    <img id="preview-image-url" alt="Vista previa de URL">
                     {% for error in form.image_url.errors %}
                         <div class="error-message">{{ error }}</div>
                     {% endfor %}
                 </div>
->>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
             </div>
         </div>
 
@@ -382,55 +352,32 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // --- SELECTORES ---
-    const imageSourceRadios = document.querySelectorAll('input[name="image_source"]');
-    const uploadContainer = document.getElementById('upload-container');
-    const urlContainer = document.getElementById('url-container');
+    const uploadFileBtn = document.getElementById('upload-file-btn');
+    const uploadUrlBtn = document.getElementById('upload-url-btn');
+    const dropZoneWrapper = document.getElementById('drop-zone-wrapper');
+    const urlWrapper = document.getElementById('url-wrapper');
     
     const dropZone = document.getElementById('drop-zone');
     const imageInput = document.querySelector('input[type="file"][name="image"]');
     const imageUrlInput = document.querySelector('input[name="image_url"]');
     
-    const previewImageFile = document.getElementById('preview-image-file');
+    const previewImage = document.getElementById('preview-image');
     const previewImageUrl = document.getElementById('preview-image-url');
     const dropText = dropZone.querySelector('p');
-    const uploadFileBtn = document.getElementById('upload-file-btn');
-    const uploadUrlBtn = document.getElementById('upload-url-btn');
-    const dropZoneWrapper = document.getElementById('drop-zone-wrapper');
-    const urlWrapper = document.getElementById('url-wrapper');
-    const imageUrlInput = document.querySelector('input[name="image_url"]');
 
     // --- INICIALIZACIÓN ---
-    imageInput.style.display = 'none'; // Ocultar el input de archivo real
+    if (imageInput) {
+        imageInput.style.display = 'none'; // Ocultar el input de archivo real
+    }
 
-<<<<<<< HEAD
     // --- MANEJO DE VISIBILIDAD ---
-    imageSourceRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if (e.target.value === 'file') {
-                uploadContainer.style.display = 'block';
-                urlContainer.style.display = 'none';
-                imageUrlInput.value = ''; // Limpiar URL si se cambia a archivo
-                previewImageUrl.src = '';
-                previewImageUrl.style.display = 'none';
-            } else {
-                uploadContainer.style.display = 'none';
-                urlContainer.style.display = 'block';
-                imageInput.value = ''; // Limpiar archivo si se cambia a URL
-                previewImageFile.src = '';
-                previewImageFile.style.display = 'none';
-                dropText.style.display = 'block';
-            }
-        });
-    });
-
-    // --- MANEJO DE SUBIDA DE ARCHIVO ---
-=======
     uploadFileBtn.addEventListener('click', () => {
         uploadFileBtn.classList.add('active');
         uploadUrlBtn.classList.remove('active');
         dropZoneWrapper.style.display = 'block';
         urlWrapper.style.display = 'none';
-        imageUrlInput.value = ''; // Clear URL input
+        if (imageUrlInput) imageUrlInput.value = ''; // Limpiar URL
+        if (previewImageUrl) previewImageUrl.style.display = 'none'; // Ocultar preview
     });
 
     uploadUrlBtn.addEventListener('click', () => {
@@ -438,20 +385,19 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadFileBtn.classList.remove('active');
         urlWrapper.style.display = 'block';
         dropZoneWrapper.style.display = 'none';
-        imageInput.value = ''; // Clear file input
-        previewImage.style.display = 'none';
-        dropText.style.display = 'block';
+        if (imageInput) imageInput.value = ''; // Limpiar archivo
+        if (previewImage) previewImage.style.display = 'none'; // Ocultar preview
+        if (dropText) dropText.style.display = 'block';
     });
 
-    // Manejo de archivos
->>>>>>> 862c37caab75b72e00a7267df5c9687689beefe5
+    // --- MANEJO DE SUBIDA DE ARCHIVO ---
     function handleFile(file) {
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = e => {
-                previewImageFile.src = e.target.result;
-                previewImageFile.style.display = 'block';
-                dropText.style.display = 'none';
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+                if (dropText) dropText.style.display = 'none';
             };
             reader.readAsDataURL(file);
         } else {
@@ -459,61 +405,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    dropZone.addEventListener('click', () => imageInput.click());
-    imageInput.addEventListener('change', () => {
-        if (imageInput.files.length > 0) {
-            handleFile(imageInput.files[0]);
-        }
-    });
+    if (dropZone) {
+        dropZone.addEventListener('click', () => imageInput.click());
+        
+        imageInput.addEventListener('change', () => {
+            if (imageInput.files.length > 0) {
+                handleFile(imageInput.files[0]);
+            }
+        });
 
-    // Drag & Drop
-    dropZone.addEventListener('dragover', e => {
-        e.preventDefault();
-        dropZone.classList.add('dragover');
-    });
-    dropZone.addEventListener('dragleave', e => {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-    });
-    dropZone.addEventListener('drop', e => {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-        if (e.dataTransfer.files.length > 0) {
-            imageInput.files = e.dataTransfer.files;
-            handleFile(e.dataTransfer.files[0]);
-        }
-    });
+        // Drag & Drop
+        dropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        });
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) {
+                imageInput.files = e.dataTransfer.files;
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+    }
 
     // --- MANEJO DE URL ---
-    imageUrlInput.addEventListener('input', () => {
-        const url = imageUrlInput.value.trim();
-        if (url) {
-            previewImageUrl.src = url;
-            previewImageUrl.style.display = 'block';
-        } else {
-            previewImageUrl.style.display = 'none';
-        }
-    });
-
-    // Para validar la imagen de la URL al perder el foco
-    imageUrlInput.addEventListener('blur', () => {
-        const img = new Image();
-        img.onload = () => { 
-            // La imagen es válida
-            imageUrlInput.setCustomValidity(''); 
-        };
-        img.onerror = () => {
-            // La imagen no es válida o no se puede cargar
-            if(imageUrlInput.value) {
-                imageUrlInput.setCustomValidity('La URL de la imagen no es válida o no se puede acceder a ella.');
-                // Forzar la validación del navegador para que muestre el mensaje
-                imageUrlInput.reportValidity();
+    if (imageUrlInput) {
+        imageUrlInput.addEventListener('input', () => {
+            const url = imageUrlInput.value.trim();
+            if (url) {
+                previewImageUrl.src = url;
+                previewImageUrl.style.display = 'block';
             } else {
-                imageUrlInput.setCustomValidity('');
+                previewImageUrl.style.display = 'none';
             }
-        };
-        img.src = imageUrlInput.value;
-    });
+        });
+
+        // Para validar la imagen de la URL al perder el foco
+        imageUrlInput.addEventListener('blur', () => {
+            const img = new Image();
+            img.onload = () => { 
+                imageUrlInput.setCustomValidity(''); 
+            };
+            img.onerror = () => {
+                if(imageUrlInput.value) {
+                    imageUrlInput.setCustomValidity('La URL de la imagen no es válida o no se puede acceder a ella.');
+                    imageUrlInput.reportValidity();
+                } else {
+                    imageUrlInput.setCustomValidity('');
+                }
+            };
+            img.src = imageUrlInput.value;
+        });
+    }
 });
 </script>
 {% endblock %}
