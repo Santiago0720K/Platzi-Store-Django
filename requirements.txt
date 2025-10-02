@@ -1,2 +1,6 @@
 Django==5.2.5
 Pillow==11.3.0
+psycopg2-binary 
+requests
+
+# pip install -r requirements.txt
