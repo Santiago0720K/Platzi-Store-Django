@@ -1,7 +1,7 @@
-Django==5.2.5
-Pillow==11.3.0
+Django
+Pillow
 psycopg2-binary 
 requests
-gunicorn
+djangorestframework
 
 # pip install -r requirements.txt
